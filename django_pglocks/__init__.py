@@ -6,7 +6,7 @@ from zlib import crc32
 @contextmanager
 def advisory_lock(lock_id, shared=False, wait=True, using=None):
 
-    from django.db import DEFAULT_DB_ALIAS, connections, transaction
+    from django.db import DEFAULT_DB_ALIAS, connections
     from django.utils import six
 
     if using is None:
