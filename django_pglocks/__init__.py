@@ -5,13 +5,20 @@ __version__ = '1.0.2'
 
 
 @contextmanager
-def advisory_lock(lock_id, shared=False, wait=True, using=None):
+def advisory_lock(lock_id, shared=False, wait=True, using=None, connection=None):
 
-    from django.db import DEFAULT_DB_ALIAS, connections
-    from django.utils import six
+    # The `connection` can set to an instance of :class:`psycopg2.connection`.
+    # If missing then the connection is retrieved with Django.
 
-    if using is None:
-        using = DEFAULT_DB_ALIAS
+    if connection:
+        assert not using
+        import six
+    else:
+        from django.db import DEFAULT_DB_ALIAS, connections
+        from django.utils import six
+        if using is None:
+            using = DEFAULT_DB_ALIAS
+        connection = connections[using]
 
     # Assemble the function name based on the options.
 
@@ -62,7 +69,7 @@ def advisory_lock(lock_id, shared=False, wait=True, using=None):
     acquire_params = (function_name, ) + params
 
     command = base % acquire_params
-    cursor = connections[using].cursor()
+    cursor = connection.cursor()
 
     cursor.execute(command)
 
