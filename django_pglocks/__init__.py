@@ -1,7 +1,8 @@
-__version__ = '1.0.2'
-
 from contextlib import contextmanager
 from zlib import crc32
+
+__version__ = '1.0.2'
+
 
 @contextmanager
 def advisory_lock(lock_id, shared=False, wait=True, using=None):
@@ -58,7 +59,7 @@ def advisory_lock(lock_id, shared=False, wait=True, using=None):
         base = "SELECT %s(%d)"
         params = (lock_id,)
 
-    acquire_params = ( function_name, ) + params
+    acquire_params = (function_name, ) + params
 
     command = base % acquire_params
     cursor = connections[using].cursor()
@@ -74,7 +75,7 @@ def advisory_lock(lock_id, shared=False, wait=True, using=None):
         yield acquired
     finally:
         if acquired:
-            release_params = ( release_function_name, ) + params
+            release_params = (release_function_name, ) + params
 
             command = base % release_params
             cursor.execute(command)
