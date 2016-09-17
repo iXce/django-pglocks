@@ -90,6 +90,7 @@ class advisory_lock(object):
         if self.acquired:
             command = self.query_base % self.release_params
             self.cursor.execute(command)
+            self.acquired = False
         self.cursor.close()
 
     def __enter__(self):
